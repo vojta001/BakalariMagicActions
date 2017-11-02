@@ -88,8 +88,8 @@ function modifUI() {
 		jQuery(this).append(
 			'<td><table cellpadding="0" cellspacing="0" border="0"><tbody><tr><td>' +
 			'<table cellpadding="0" cellspacing="0" border="0"><tbody>' +
-			'<tr><td><input style="position:relative;width:35px;height:13px;margin:0px;" class="inznamka" type="number" min="1" max="5" step="1" value="1"></td></tr>' +
-			'<tr><td><input style="position:relative;width:35px;height:13px;margin:0px;" class="intyp" type="number" min="1" max="10" step="1" value="1"></td></tr>' +
+			'<tr><td><input style="position:relative;width:35px;height:13px;margin:0;" class="inznamka" type="number" min="1" max="5" step="1" value="1"></td></tr>' +
+			'<tr><td><input style="position:relative;width:35px;height:13px;margin:0;" class="intyp" type="number" min="1" max="10" step="1" value="1"></td></tr>' +
 			'</tbody></table>' +
 			'</td><td><button style="height:26px;width:26px;" onclick="addznamka(this);return false;">+</button></td></tr></tbody></table></td>');
 		jQuery(this).find(".detznamka td").each(function () {
