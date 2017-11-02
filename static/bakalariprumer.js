@@ -5,13 +5,11 @@ Version: 1.1
 Licence: GPL v3
 */
 
-<!-- declare vars -->
 var znamka = 0;
 var vaha = 0;
 var lastid = 0;
 
 
-<!-- calculateWeightedAvg function -->
 function calculateWeightedAvg() {
 	var prumer = jQuery('.prumer');
 	if (prumer.length) {
