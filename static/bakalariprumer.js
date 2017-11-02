@@ -13,8 +13,9 @@ var lastid = 0;
 
 <!-- calculateWeightedAvg function -->
 function calculateWeightedAvg() {
-	if (jQuery('.prumer').length) {
-		jQuery('.prumer').remove();
+	var prumer = jQuery('.prumer');
+	if (prumer.length) {
+		prumer.remove();
 	}
 
 	jQuery(".radekznamky").children("tbody").children("tr").each(function () {
@@ -64,8 +65,9 @@ function calculateWeightedAvg() {
 }
 
 function checkDetailEnabled() {
-	if (jQuery("#cphmain_Flyout2_Checktypy_S_D").hasClass("dxWeb_edtCheckBoxUnchecked")) {
-		jQuery("#cphmain_Flyout2_Checktypy_S_D").click();
+	var detail = jQuery("#cphmain_Flyout2_Checktypy_S_D");
+	if (detail.hasClass("dxWeb_edtCheckBoxUnchecked")) {
+		detail.click();
 		return false;
 	} else {
 		return true;
