@@ -5,8 +5,6 @@ Version: 1.1
 Licence: GPL v3
 */
 
-var znamka = 0;
-var vaha = 0;
 var lastid = 0;
 
 
@@ -17,49 +15,52 @@ function calculateWeightedAvg() {
 	}
 
 	jQuery(".radekznamky").children("tbody").children("tr").each(function () {
-		var znamky = [];
-		var vahy = [];
-		var sumznamky = 0;
-		var sumvahy = 0;
-		var sum = 0;
-		var wavg = 0;
 
-
-		jQuery(this).find(".typ").each(function () {
-			jQuery(this).find("td").not(".disabled").each(function () {
-				vaha = Number(jQuery(this).text().replace(/U/g, 6).replace(/X/g, 10).replace(/R/g, 3).replace(/P/g, 4).replace(/C/g, 10));
-				vahy.push(vaha);
-				sumvahy += vaha;
-			});
-
-		});
-
-		jQuery(this).find(".detznamka").each(function () {
-			jQuery(this).find("td").not(".disabled").each(function () {
-				znamka = Number(jQuery(this).text().replace(/X/g, 0).replace(/\?/g, 0).replace(/U/g, 0).replace(/N/g, 0).replace(/A/g, 0).replace(/1-/g, 1.5).replace(/2-/g, 2.5).replace(/3-/g, 3.5).replace(/4-/g, 4.5).replace(/-/g, 0).replace(/!$/, ''));
-				znamky.push(znamka);
-				sumznamky += znamka;
-			});
-
-		});
-
-		jQuery.each(znamky, function (id, zn) {
-			zn = Number(zn);
-			if (zn !== 0) {
-				sum += (zn * vahy[id]);
-			} else {
-				sumvahy -= vahy[id];
-			}
-		});
-		wavg = (Math.round(sum / sumvahy * 100) / 100).toFixed(2);
+		var row = processRow(this);
+		var wavg = (Math.round(row.sum / row.sumvahy * 100) / 100).toFixed(2);
 		if (isNaN(wavg)) {
 			wavg = 0;
 		}
-
 		jQuery(this).append(jQuery('<td class="prumer"><span style="color:blue; font-size: 18pt;">' + wavg + '</span>'));
 	});
 
 	console.log("Recalculated averages");
+}
+
+function processRow(row) {
+	var znamky = [];
+	var vahy = [];
+	var sumznamky = 0;
+	var sumvahy = 0;
+	var sum = 0;
+
+	jQuery(row).find(".typ").each(function () {
+		jQuery(this).find("td").not(".disabled").each(function () {
+			var vaha = Number(jQuery(this).text().replace(/U/g, 6).replace(/X/g, 10).replace(/R/g, 3).replace(/P/g, 4).replace(/C/g, 10));
+			vahy.push(vaha);
+			sumvahy += vaha;
+		});
+
+	});
+
+	jQuery(row).find(".detznamka").each(function () {
+		jQuery(this).find("td").not(".disabled").each(function () {
+			var znamka = Number(jQuery(this).text().replace(/X/g, 0).replace(/\?/g, 0).replace(/U/g, 0).replace(/N/g, 0).replace(/A/g, 0).replace(/1-/g, 1.5).replace(/2-/g, 2.5).replace(/3-/g, 3.5).replace(/4-/g, 4.5).replace(/-/g, 0).replace(/!$/, ''));
+			znamky.push(znamka);
+			sumznamky += znamka;
+		});
+
+	});
+
+	jQuery.each(znamky, function (id, zn) {
+		zn = Number(zn);
+		if (zn !== 0) {
+			sum += (zn * vahy[id]);
+		} else {
+			sumvahy -= vahy[id];
+		}
+	});
+	return {sum: sum, sumvahy: sumvahy};
 }
 
 function checkDetailEnabled() {
@@ -73,8 +74,8 @@ function checkDetailEnabled() {
 }
 
 function addznamka(element) {
-	znamka = jQuery(element).parent().parent().find('.inznamka').val();
-	vaha = jQuery(element).parent().parent().find('.intyp').val();
+	var znamka = jQuery(element).parent().parent().find('.inznamka').val();
+	var vaha = jQuery(element).parent().parent().find('.intyp').val();
 	jQuery(element).closest('table').parent().parent().find('.detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
 	jQuery(element).closest('table').parent().parent().find('.typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
 
