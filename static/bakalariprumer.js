@@ -75,8 +75,8 @@ function checkDetailEnabled() {
 function addznamka(element) {
 	znamka = jQuery(element).parent().parent().find('.inznamka').val();
 	vaha = jQuery(element).parent().parent().find('.intyp').val();
-	jQuery(element).closest('table').parent().find('.detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
-	jQuery(element).closest('table').parent().find('.typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
+	jQuery(element).closest('table').parent().parent().find('.detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
+	jQuery(element).closest('table').parent().parent().find('.typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
 
 	lastid += 1;
 
