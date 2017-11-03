@@ -9,22 +9,25 @@ var lastid = 0;
 
 
 function calculateWeightedAvg() {
-	var prumer = jQuery('.prumer');
+	jQuery(".radekznamky").children("tbody").children("tr").each(function () {
+		recomputeRow(this);
+	});
+
+	console.log("Recalculated averages");
+}
+
+function recomputeRow(row) {
+	var prumer = jQuery(row).find('.prumer');
 	if (prumer.length) {
 		prumer.remove();
 	}
 
-	jQuery(".radekznamky").children("tbody").children("tr").each(function () {
-
-		var row = processRow(this);
-		var wavg = (Math.round(row.sum / row.sumvahy * 100) / 100).toFixed(2);
-		if (isNaN(wavg)) {
-			wavg = 0;
-		}
-		jQuery(this).append(jQuery('<td class="prumer"><span style="color:blue; font-size: 18pt;">' + wavg + '</span>'));
-	});
-
-	console.log("Recalculated averages");
+	var processed = processRow(row);
+	var wavg = Math.round(processed.sum / processed.sumvahy * 100) / 100;
+	if (isNaN(wavg)) {
+		wavg = 0;
+	}
+	jQuery(row).append(jQuery('<td class="prumer"><span style="color:blue; font-size: 18pt;">' + wavg.toFixed(2) + '</span>'));
 }
 
 function processRow(row) {
@@ -74,14 +77,17 @@ function checkDetailEnabled() {
 }
 
 function addznamka(element) {
-	var znamka = jQuery(element).parent().parent().find('.inznamka').val();
-	var vaha = jQuery(element).parent().parent().find('.intyp').val();
-	jQuery(element).closest('table').parent().parent().find('.detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
-	jQuery(element).closest('table').parent().parent().find('.typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
+	var inputs = jQuery(element).parent().parent();
+	var znamka = inputs.find('.inznamka').val();
+	var vaha = inputs.find('.intyp').val();
+
+	var row = jQuery(element).closest('table').parent().parent();
+	row.find('.detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
+	row.find('.typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
 
 	lastid += 1;
 
-	calculateWeightedAvg();
+	recomputeRow(row);
 }
 
 function modifUI() {
