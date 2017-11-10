@@ -113,8 +113,8 @@ function modifUI() {
 }
 
 function removeZnamka(id) {
-	var thisid = $(id).attr('id');
-	$("td[id=" + thisid + "]").remove();
+	var thisid = jQuery((id).attr('id'));
+	jQuery("td[id=" + thisid + "]").remove();
 
 	console.log("Removed znamka #" + thisid);
 	calculateWeightedAvg();
