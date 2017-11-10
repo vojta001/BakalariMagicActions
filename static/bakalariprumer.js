@@ -12,8 +12,6 @@ function calculateWeightedAvg() {
 	jQuery(".radekznamky").children("tbody").children("tr").each(function () {
 		recomputeRow(this);
 	});
-
-	console.log("Recalculated averages");
 }
 
 function recomputeRow(row) {
@@ -116,7 +114,6 @@ function removeZnamka(id) {
 	var thisid = jQuery((id).attr('id'));
 	jQuery("td[id=" + thisid + "]").remove();
 
-	console.log("Removed znamka #" + thisid);
 	calculateWeightedAvg();
 }
 
