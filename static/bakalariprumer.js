@@ -18,16 +18,13 @@ function calculateWeightedAvg() {
 
 function recomputeRow(row) {
 	var prumer = jQuery(row).find('.prumer');
-	if (prumer.length) {
-		prumer.remove();
-	}
 
 	var processed = processRow(row);
 	var wavg = Math.round(processed.sum / processed.sumvahy * 100) / 100;
 	if (isNaN(wavg)) {
 		wavg = 0;
 	}
-	jQuery(row).append(jQuery('<td class="prumer"><span style="color:blue; font-size: 18pt;">' + wavg.toFixed(2) + '</span>'));
+	prumer.html('<span style="color:blue; font-size: 18pt;">' + wavg.toFixed(2) + '</span>');
 }
 
 function processRow(row) {
@@ -37,7 +34,7 @@ function processRow(row) {
 	var sumvahy = 0;
 	var sum = 0;
 
-	jQuery(row).find(".typ").each(function () {
+	jQuery(row).find(".predm .typ").each(function () {
 		jQuery(this).find("td").not(".disabled").each(function () {
 			var vaha = Number(jQuery(this).text().replace(/U/g, 6).replace(/X/g, 10).replace(/R/g, 3).replace(/P/g, 4).replace(/C/g, 10));
 			vahy.push(vaha);
@@ -46,7 +43,7 @@ function processRow(row) {
 
 	});
 
-	jQuery(row).find(".detznamka").each(function () {
+	jQuery(row).find(".predm .detznamka").each(function () {
 		jQuery(this).find("td").not(".disabled").each(function () {
 			var znamka = Number(jQuery(this).text().replace(/X/g, 0).replace(/\?/g, 0).replace(/U/g, 0).replace(/N/g, 0).replace(/A/g, 0).replace(/1-/g, 1.5).replace(/2-/g, 2.5).replace(/3-/g, 3.5).replace(/4-/g, 4.5).replace(/-/g, 0).replace(/!$/, ''));
 			znamky.push(znamka);
@@ -82,8 +79,8 @@ function addznamka(element) {
 	var vaha = inputs.find('.intyp').val();
 
 	var row = jQuery(element).closest('table').parent().parent();
-	row.find('.detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
-	row.find('.typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
+	row.find('.predm .detznamka').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + znamka + "</td>");
+	row.find('.predm .typ').append('<td class="modif" id="znamka_' + (lastid + 1) + '" onclick="removeZnamka(this)" style="color:darkgreen">' + vaha + "</td>");
 
 	lastid += 1;
 
@@ -98,7 +95,11 @@ function modifUI() {
 			'<tr><td><input style="position:relative;width:35px;height:13px;margin:0;" class="inznamka" type="number" min="1" max="5" step="1" value="1"></td></tr>' +
 			'<tr><td><input style="position:relative;width:35px;height:13px;margin:0;" class="intyp" type="number" min="1" max="10" step="1" value="1"></td></tr>' +
 			'</tbody></table>' +
-			'</td><td><button style="height:26px;width:26px;" onclick="addznamka(this);return false;">+</button></td></tr></tbody></table></td>');
+			'</td><td><button style="height:26px;width:26px;" onclick="addznamka(this);return false;">+</button></td></tr></tbody></table></td>' +
+			'<td class="prumer"></td>' +
+			'<td><button onclick="want(this);return false;">Chci:</button><input style="width:35px;height:13px;" type="number" min="1" max="5" step="1" value="1"></td>' +
+			'<td class="want"><table class="znmala"><tr class="detznamka"></tr><tr class="typ"></tr></table></td>'
+		);
 		jQuery(this).find(".detznamka td").each(function () {
 			jQuery(this).click(function () {
 				jQuery(this).toggleClass("disabled");
@@ -117,6 +118,40 @@ function removeZnamka(id) {
 
 	console.log("Removed znamka #" + thisid);
 	calculateWeightedAvg();
+}
+
+function want(element) {
+	var row = jQuery(element).parent().parent();
+	var input = Number(jQuery(element).parent().find('input')[0].value);
+	var table = row.find('.want table');
+	var znamkyRow = table.find('.detznamka');
+	var vahyRow = table.find('.typ');
+	var processed = processRow(row);
+	var wavg = Math.round(processed.sum / processed.sumvahy);
+
+	znamkyRow.html('');
+	vahyRow.html('');
+	for (var i = 1; i <= 5; i++) {
+		if (input === wavg) {
+			var vaha = 'x';
+		} else {
+			if (input < wavg) {
+				var wants = input + 0.49;
+			} else {
+				var wants = input - 0.5;
+			}
+			var required = (processed.sum - wants * processed.sumvahy) / (wants - i);
+			if (required < 0) {
+				var vaha = 'x'
+			} else if (!isFinite(required)) {
+				var vaha = '∞';
+			} else {
+				var vaha = required.toFixed(1);
+			}
+		}
+		znamkyRow.append('<td>' + i + '</td>');
+		vahyRow.append('<td>' + vaha + '</td>');
+	}
 }
 
 jQuery(document).ready(function () {
