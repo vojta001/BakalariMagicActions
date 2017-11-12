@@ -111,7 +111,7 @@ function modifUI() {
 }
 
 function removeZnamka(id) {
-	var thisid = jQuery((id).attr('id'));
+	var thisid = jQuery(id).attr('id');
 	jQuery("td[id=" + thisid + "]").remove();
 
 	calculateWeightedAvg();
